@@ -97,36 +97,36 @@ XCheck - Specification for QR Code on Bank Cheques with Extensible JSON Format
 # 4. Data Formats
 
 ## 4.1 QR Code Content TLV Field Definitions
-
+```
    +-----+---------------------------+----------------+-----------------------+
-   | Tag | Field                    | Enforcement    | Description           |
+   | Tag | Field                     | Enforcement    | Description           |
    +-----+---------------------------+----------------+-----------------------+
-   |  1  | Specification Version    | Mandatory      | Version (e.g., "1.0") |
+   |  1  | Specification Version     | Mandatory      | Version (e.g., "1.0") |
    +-----+---------------------------+----------------+-----------------------+
-   |  2  | Issuing Bank Name        | Mandatory      | Legal name of bank    |
+   |  2  | Issuing Bank Name         | Mandatory      | Legal name of bank    |
    +-----+---------------------------+----------------+-----------------------+
-   |  3  | Bank Routing Number      | Mandatory      | ABA or SWIFT code     |
+   |  3  | Bank Routing Number       | Mandatory      | ABA or SWIFT code      |
    +-----+---------------------------+----------------+-----------------------+
-   |  4  | Drawer Name              | Mandatory      | Full name of drawer   |
+   |  4  | Drawer Name               | Mandatory      | Full name of drawer    |
    +-----+---------------------------+----------------+-----------------------+
-   |  5  | Drawer Account Number    | Mandatory      | Drawer's account      |
+   |  5  | Drawer Account Number     | Mandatory      | Drawer's account       |
    +-----+---------------------------+----------------+-----------------------+
-   |  6  | Beneficiary Name         | Mandatory      | Full name of payee    |
+   |  6  | Beneficiary Name          | Mandatory      | Full name of payee     |
    +-----+---------------------------+----------------+-----------------------+
-   |  7  | Cheque Amount            | Mandatory      | Decimal (e.g., "123.45") |
+   |  7  | Cheque Amount             | Mandatory      | Decimal (e.g., "123.45") |
    +-----+---------------------------+----------------+-----------------------+
-   |  8  | Timestamp                | Mandatory      | ISO 8601 (e.g.,       |
-   |     |                          |                | "2025-02-18T10:00:00Z") |
+   |  8  | Timestamp                 | Mandatory      | ISO 8601 (e.g.,       |
+   |     |                           |                | "2025-02-18T10:00:00Z") |
    +-----+---------------------------+----------------+-----------------------+
-   |  9  | Hash of Mandatory JSON   | Mandatory      | SHA256 of "data.mandatory" |
+   |  9  | Hash of Mandatory JSON    | Mandatory      | SHA256 of "data.mandatory" |
    +-----+---------------------------+----------------+-----------------------+
-   | 10  | ECDSA Signature          | Mandatory      | Signature of Tag 9    |
+   | 10  | ECDSA Signature           | Mandatory      | Signature of Tag 9    |
    +-----+---------------------------+----------------+-----------------------+
-   | 11  | ECDSA Public Key         | Mandatory      | Bank's public key     |
+   | 11  | ECDSA Public Key          | Mandatory      | Bank's public key     |
    +-----+---------------------------+----------------+-----------------------+
-   | 12+ | Issuer-Specific Fields   | Optional       | Defined by issuer     |
+   | 12+ | Issuer-Specific Fields    | Optional       | Defined by issuer     |
    +-----+---------------------------+----------------+-----------------------+
-
+```
    - **Mandatory Fields (Tags 1-11)**: MUST be present and match JSON "data.mandatory".
    - **Optional Fields (Tags 12-255)**: MAY be added by issuers; ignored by unaware parties.
    - Tag 9 hashes only the "data.mandatory" block to ensure interoperability.
@@ -134,7 +134,7 @@ XCheck - Specification for QR Code on Bank Cheques with Extensible JSON Format
 ## 4.2 JSON Data Format
 
    The cheque SHALL be accompanied by a JSON file with this structure:
-
+```
    {
      "data": {
        "mandatory": {
@@ -155,7 +155,7 @@ XCheck - Specification for QR Code on Bank Cheques with Extensible JSON Format
      "signature": "string",              // Base64 ECDSA signature of SHA256("data.mandatory")
      "qrCode": "string"                  // Base64 TLV of Tags 1-11 + optional Tags 12+
    }
-
+```
    - **"data.mandatory"**: Contains required fields (Tags 1-8 equivalents).
      - MUST be canonicalized (e.g., sorted keys, no whitespace) before hashing.
      - SHA256 hash stored in Tag 9 and signed in "signature" and Tag 10.
@@ -201,7 +201,7 @@ XCheck - Specification for QR Code on Bank Cheques with Extensible JSON Format
 
    None.
 # Appendix A: Example JSON and QR Encoding
-
+```
    **JSON Example**:
    {
      "data": {
@@ -224,3 +224,4 @@ XCheck - Specification for QR Code on Bank Cheques with Extensible JSON Format
      "signature": "MEUCIQC... [Base64 ECDSA of SHA256(data.mandatory)]",
      "qrCode": "AQABA... [Base64 TLV Tags 1-11 + e.g., Tag 12=chequeNumber]"
    }
+```
